@@ -1,16 +1,174 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecionando...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Página de Entrada</title>
+
+  <!-- Meta Pixel Code -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Faz o redirecionamento diretamente, sem bloqueio
-      window.location.href = "https://mais.red/run/23051a";
-    });
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1402106630879240');
+  fbq('track', 'PageView');
   </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1402106630879240&ev=PageView&noscript=1" />
+  </noscript>
+  <!-- End Meta Pixel Code -->
+
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    #background-image {
+      background-image: url('https://i.postimg.cc/Y041pHKb/photo-5906917184624509116-y.jpg');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .btn-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      height: 100vh;
+      width: 100%;
+      text-align: center;
+    }
+
+    .custom-btn {
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 250px;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      user-select: none;
+    }
+
+    .btn-whatsapp {
+      background-color: #25D366;
+    }
+    .btn-whatsapp:hover {
+      background-color: #1ebe5b;
+    }
+
+    .btn-telegram {
+      background-color: #0088cc;
+    }
+    .btn-telegram:hover {
+      background-color: #0077b5;
+    }
+
+    .custom-btn i {
+      font-size: 20px;
+    }
+
+    .disabled {
+      background-color: gray !important;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecionando... Se não funcionar, <a href="https://mais.red/run/23051a">clique aqui</a>.</p>
+
+  <div id="background-image"></div>
+
+  <div class="btn-container">
+    <button id="btnWhatsapp" class="custom-btn btn-whatsapp">
+      <i class="fab fa-whatsapp"></i> Comprar pelo WhatsApp
+    </button>
+
+    <button id="btnTelegram" class="custom-btn btn-telegram">
+      <i class="fab fa-telegram"></i> Grupo grátis no Telegram
+    </button>
+  </div>
+
+  <script>
+    const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    const urlParams = new URLSearchParams(window.location.search);
+
+    utmParams.forEach(param => {
+      const value = urlParams.get(param);
+      if (value) {
+        sessionStorage.setItem(param, value);
+        localStorage.setItem(param, value);
+      }
+    });
+
+    function buildURL(baseURL) {
+      const utmString = utmParams.map(param => {
+        const val = sessionStorage.getItem(param) || localStorage.getItem(param);
+        return val ? `${param}=${encodeURIComponent(val)}` : null;
+      }).filter(Boolean).join('&');
+      return utmString ? `${baseURL}?${utmString}` : baseURL;
+    }
+
+    const btnWhatsapp = document.getElementById('btnWhatsapp');
+    const btnTelegram = document.getElementById('btnTelegram');
+
+    // Checar se já passou 4 dias desde o último clique
+    const lastClickTime = localStorage.getItem('whatsappClickTime');
+    const now = Date.now();
+    const fourDays = 4 * 24 * 60 * 60 * 1000; // 4 dias em ms
+
+    if (lastClickTime && (now - lastClickTime) < fourDays) {
+      disableWhatsappButton();
+    }
+
+    function disableWhatsappButton() {
+      btnWhatsapp.classList.add('disabled');
+      btnWhatsapp.disabled = true;
+      btnWhatsapp.innerHTML = "WhatsApp indisponível";
+    }
+
+    btnWhatsapp.addEventListener('click', function () {
+      if (btnWhatsapp.disabled) return;
+
+      fbq('track', 'Lead');
+      localStorage.setItem('whatsappClickTime', Date.now());
+      disableWhatsappButton();
+
+      const finalURL = buildURL("https://mais.red/run/26237");
+      window.location.href = finalURL;
+    });
+
+    btnTelegram.addEventListener('click', function () {
+      fbq('track', 'Lead');
+      const finalURL = buildURL("https://t.me/+rgxCXuWwd_Y2NjRh");
+      window.location.href = finalURL;
+    });
+  </script>
 </body>
 </html>
